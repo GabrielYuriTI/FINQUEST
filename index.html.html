@@ -1,0 +1,1993 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>FinQuest - Planejamento & Cofrinhos (v3)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-card: #111827;
+      --bg-card-soft: #020617;
+      --primary: #38bdf8;
+      --primary-soft: rgba(56,189,248,0.15);
+      --accent: #a855f7;
+      --accent-soft: rgba(168,85,247,0.15);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --danger: #f97373;
+      --success: #4ade80;
+      --border: #1f2933;
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 18px 40px rgba(15,23,42,0.65);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at top, #0f172a 0, #020617 40%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px;
+    }
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      background: linear-gradient(145deg, rgba(15,23,42,0.9), rgba(2,6,23,0.98));
+      border-radius: 28px;
+      border: 1px solid rgba(148,163,184,0.2);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid rgba(148,163,184,0.2);
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 55%);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 30% 0, #38bdf8, #0ea5e9, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 0 35px rgba(56,189,248,0.8);
+    }
+    .logo-text-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .logo-text-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.35);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15,23,42,0.65);
+    }
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 12px rgba(74,222,128,0.9);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-reset {
+      border-radius: 999px;
+      padding: 6px 12px;
+      border: 1px solid rgba(248,113,113,0.9);
+      background: rgba(127,29,29,0.6);
+      color: #fecaca;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-reset:hover {
+      background: rgba(127,29,29,0.85);
+    }
+    .app-body {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+    }
+    @media (max-width: 900px) {
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+    }
+    .sidebar {
+      border-right: 1px solid rgba(148,163,184,0.18);
+      padding: 16px 14px 18px;
+      background: radial-gradient(circle at top, rgba(88,28,135,0.55), transparent 60%);
+    }
+    @media (max-width: 900px) {
+      .sidebar {
+        display: flex;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(148,163,184,0.18);
+        padding-bottom: 12px;
+      }
+    }
+    .nav-group-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+    .nav-section + .nav-section {
+      margin-top: 18px;
+    }
+    .nav-btn {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.18s ease-out;
+      margin-bottom: 4px;
+      text-align: left;
+    }
+    .nav-btn span.label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn span.icon {
+      font-size: 16px;
+    }
+    .nav-btn small {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+    .nav-btn:hover {
+      background: rgba(15,23,42,0.9);
+      border-color: rgba(148,163,184,0.5);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+    .nav-btn.active {
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.25), rgba(15,23,42,0.95));
+      border-color: rgba(56,189,248,0.9);
+      color: #e0f2fe;
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.8);
+    }
+    .nav-footer-card {
+      margin-top: 16px;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,47,73,0.9));
+      border-radius: 16px;
+      border: 1px solid rgba(8,47,73,0.9);
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .nav-footer-card strong {
+      color: var(--text);
+      font-size: 13px;
+    }
+    .nav-footer-bar {
+      margin-top: 10px;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      overflow: hidden;
+      position: relative;
+    }
+    .nav-footer-bar-fill {
+      position: absolute;
+      inset: 0;
+      width: 44%;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      box-shadow: 0 0 18px rgba(34,197,94,0.9);
+    }
+    .content {
+      padding: 18px 18px 20px;
+    }
+    .content-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .content-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .content-title span.sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .tag-chip {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 11px;
+      padding: 5px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15,23,42,0.85);
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.1fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.08), rgba(15,23,42,0.98));
+      border: 1px solid rgba(15,23,42,0.9);
+      padding: 14px 14px 14px;
+      box-shadow: 0 20px 38px rgba(15,23,42,0.85);
+    }
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .card-title-row h3 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .card-title-row span {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .balance-main {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .balance-main span.label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+    }
+    .balance-main span.value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .balance-main span.badge {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(22,163,74,0.18);
+      border: 1px solid rgba(34,197,94,0.85);
+      color: #bbf7d0;
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .kpi-chip {
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(30,64,175,0.8);
+      font-size: 11px;
+    }
+    .kpi-chip span.label {
+      display: block;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+    .kpi-chip span.value {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .kpi-chip span.meta {
+      font-size: 11px;
+      color: var(--success);
+    }
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      margin-top: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar-fill {
+      position: absolute;
+      inset: 0;
+      width: 42%;
+      background: linear-gradient(90deg, #22c55e, #a855f7);
+      box-shadow: 0 0 26px rgba(56,189,248,0.9);
+    }
+    .mini-text {
+      font-size: 11px;
+      margin-top: 6px;
+      color: var(--text-soft);
+    }
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .pill-soft {
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(51,65,85,0.9);
+      color: var(--text-soft);
+    }
+    .pill-soft.positive {
+      border-color: rgba(34,197,94,0.9);
+      color: #bbf7d0;
+    }
+    .pill-soft.warning {
+      border-color: rgba(234,179,8,0.85);
+      color: #facc15;
+    }
+    .pill-soft.danger {
+      border-color: rgba(248,113,113,0.9);
+      color: #fecaca;
+    }
+    .missions-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mission-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 8px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(30,64,175,0.85);
+      font-size: 12px;
+      gap: 6px;
+    }
+    .mission-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .mission-badge {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 2px solid rgba(148,163,184,0.9);
+      box-shadow: inset 0 0 0 3px rgba(15,23,42,0.9);
+    }
+    .mission-item span.xp {
+      font-size: 11px;
+      color: #a5b4fc;
+      white-space: nowrap;
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: all 0.16s ease-out;
+    }
+    .tab-btn.active {
+      border-color: rgba(56,189,248,0.9);
+      color: #e0f2fe;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.25), rgba(15,23,42,0.96));
+      box-shadow: 0 0 16px rgba(56,189,248,0.55);
+    }
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .form-row {
+      display: flex;
+      gap: 8px;
+    }
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+      }
+    }
+    .form-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    label {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    input, select, textarea {
+      border-radius: 10px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text);
+      padding: 7px 9px;
+      font-size: 13px;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(56,189,248,0.9);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.35);
+    }
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+    .btn-primary {
+      border-radius: 999px;
+      padding: 8px 14px;
+      border: none;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      color: #ecfeff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      box-shadow: 0 16px 30px rgba(37,99,235,0.8);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(37,99,235,0.9);
+    }
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 7px 12px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-small-danger {
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px solid rgba(248,113,113,0.9);
+      background: transparent;
+      color: #fecaca;
+      font-size: 10px;
+      cursor: pointer;
+    }
+    .section {
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .section.active {
+      display: block;
+    }
+    .transactions-list {
+      margin-top: 6px;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(31,41,55,0.95);
+      max-height: 210px;
+      overflow: auto;
+    }
+    .tx-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px;
+      padding: 8px 10px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(31,41,55,0.7);
+    }
+    .tx-item:last-child {
+      border-bottom: none;
+    }
+    .tx-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tx-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+    .tx-category {
+      color: var(--text-soft);
+      font-size: 11px;
+    }
+    .tx-date {
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: right;
+    }
+    .tx-value.pos {
+      color: #4ade80;
+      font-weight: 600;
+      text-align: right;
+    }
+    .tx-value.neg {
+      color: #f97373;
+      font-weight: 600;
+      text-align: right;
+    }
+    .badge-level {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(168,85,247,0.9);
+      background: radial-gradient(circle at top left, rgba(168,85,247,0.35), rgba(15,23,42,0.96));
+      font-size: 11px;
+      color: #f5f3ff;
+    }
+    .xp-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.96);
+      overflow: hidden;
+      position: relative;
+      margin-top: 6px;
+    }
+    .xp-fill {
+      position: absolute;
+      inset: 0;
+      width: 60%;
+      background: linear-gradient(90deg, #f97316, #a855f7, #22c55e);
+      box-shadow: 0 0 18px rgba(248,250,252,0.8);
+    }
+    .xp-caption {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+    .chips-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .chip-small {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .pill-tip {
+      padding: 7px 9px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.96);
+      border: 1px dashed rgba(148,163,184,0.7);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .pill-tip strong {
+      color: #e0f2fe;
+    }
+    .list-simple {
+      margin-top: 6px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(31,41,55,0.95);
+      max-height: 210px;
+      overflow: auto;
+      font-size: 12px;
+    }
+    .list-row {
+      display: grid;
+      grid-template-columns: 1.6fr 0.9fr 0.7fr auto;
+      gap: 4px;
+      padding: 7px 9px;
+      border-bottom: 1px solid rgba(31,41,55,0.7);
+      align-items: center;
+    }
+    .list-row:last-child {
+      border-bottom: none;
+    }
+    .list-row span.label {
+      color: var(--text-soft);
+      font-size: 11px;
+    }
+    .badge-soft {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 10px;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge-soft.green {
+      border-color: rgba(34,197,94,0.9);
+      color: #bbf7d0;
+    }
+    .badge-soft.red {
+      border-color: rgba(248,113,113,0.9);
+      color: #fecaca;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="logo">
+        <div class="logo-icon">FQ</div>
+        <div>
+          <div class="logo-text-title">
+            FinQuest
+            <span style="font-size:11px;color:#a5b4fc;font-weight:500;">planejamento</span>
+          </div>
+          <div class="logo-text-sub">
+            Controle diário, despesas fixas, salário e cofrinhos – tudo salvo localmente.
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Dados salvos neste navegador</span>
+        </div>
+        <button class="btn-reset" id="btnResetAll">⟳ Zerar tudo</button>
+      </div>
+    </header>
+    <div class="app-body">
+      <aside class="sidebar">
+        <div>
+          <div class="nav-section">
+            <div class="nav-group-label">Visão geral</div>
+            <button class="nav-btn active" data-section="dashboard">
+              <span class="label">
+                <span class="icon">📊</span>
+                Dashboard & Dicas
+              </span>
+              <small>Hoje</small>
+            </button>
+            <button class="nav-btn" data-section="transacoes">
+              <span class="label">
+                <span class="icon">➕</span>
+                Registrar lançamento
+              </span>
+              <small>Entrada/Saída</small>
+            </button>
+            <button class="nav-btn" data-section="planejamento">
+              <span class="label">
+                <span class="icon">📆</span>
+                Planejamento & Cofrinhos
+              </span>
+              <small>Salário & fixas</small>
+            </button>
+          </div>
+          <div class="nav-section">
+            <div class="nav-group-label">Construção</div>
+            <button class="nav-btn" data-section="reserva">
+              <span class="label">
+                <span class="icon">🛡️</span>
+                Reserva de emergência
+              </span>
+              <small>Meta</small>
+            </button>
+            <button class="nav-btn" data-section="investimentos">
+              <span class="label">
+                <span class="icon">🚀</span>
+                Simular investimentos
+              </span>
+              <small>Cenários</small>
+            </button>
+            <button class="nav-btn" data-section="gamificacao">
+              <span class="label">
+                <span class="icon">🎮</span>
+                Gamificação
+              </span>
+              <small>XP & Missões</small>
+            </button>
+          </div>
+        </div>
+        <div class="nav-footer-card">
+          <strong>Score financeiro</strong>
+          <p>Indicador baseado em constância, uso de cofrinhos e peso das fixas no salário.</p>
+          <div class="nav-footer-bar">
+            <div class="nav-footer-bar-fill"></div>
+          </div>
+          <p style="margin-top:6px;font-size:11px;">Ajuste suas despesas fixas e cofrinhos até ficar com zona verde no planejamento.</p>
+        </div>
+      </aside>
+      <main class="content">
+        <!-- DASHBOARD -->
+        <div class="section active" id="section-dashboard">
+          <div class="content-header">
+            <div class="content-title">
+              <span>Olá, bem-vindo de volta 👋</span>
+              <span class="sub">Veja seu resumo, últimos lançamentos e risco de estourar o mês.</span>
+            </div>
+            <div>
+              <button class="btn-secondary" id="btnNewTxHeader">Novo lançamento ✚</button>
+            </div>
+          </div>
+          <div class="main-grid">
+            <div>
+              <div class="card" style="margin-bottom:12px;">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Resumo rápido (baseado nos seus dados)</h3>
+                    <span>Salário, despesas fixas e cofrinhos.</span>
+                  </div>
+                  <span class="tag-chip" id="tagRiscoResumo">Planejamento</span>
+                </div>
+                <div id="planningSummaryDashboard" class="mini-text">
+                  Configure salário e despesas fixas na aba <strong>Planejamento & Cofrinhos</strong> para ver o risco do mês aqui.
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Últimos lançamentos</h3>
+                    <span>Baseado no que você registrou.</span>
+                  </div>
+                  <button class="btn-secondary" id="btnGoTransacoes">Registrar mais</button>
+                </div>
+                <div class="transactions-list" id="txListDashboard">
+                  <!-- Itens de lançamentos são gerados via JavaScript -->
+                </div>
+                <div class="mini-text">
+                  Lançamentos, despesas fixas, salário e cofrinhos ficam salvos apenas neste navegador (localStorage).
+                  Se você limpar os dados/cache, tudo é apagado.
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="card" style="margin-bottom:12px;">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Missões de hoje 🎯</h3>
+                    <span>Conectadas ao planejamento.</span>
+                  </div>
+                  <span class="tag-chip">+ 75 XP possíveis</span>
+                </div>
+                <ul class="missions-list">
+                  <li class="mission-item">
+                    <div class="mission-left">
+                      <div class="mission-badge"></div>
+                      <span>Registrar 3 gastos do dia</span>
+                    </div>
+                    <span class="xp">+25 XP</span>
+                  </li>
+                  <li class="mission-item">
+                    <div class="mission-left">
+                      <div class="mission-badge"></div>
+                      <span>Revisar despesas fixas do mês</span>
+                    </div>
+                    <span class="xp">+25 XP</span>
+                  </li>
+                  <li class="mission-item">
+                    <div class="mission-left">
+                      <div class="mission-badge"></div>
+                      <span>Alimentar um cofrinho</span>
+                    </div>
+                    <span class="xp">+25 XP</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Dica do dia 💡</h3>
+                    <span>Exemplo de insight futuro.</span>
+                  </div>
+                </div>
+                <div class="pill-tip" id="dicaDia">
+                  Configure salário e despesas fixas. Assim o app consegue mostrar, em uma próxima versão, qual percentual da renda já está comprometido antes mesmo do mês começar.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRANSACOES -->
+        <div class="section" id="section-transacoes">
+          <div class="content-header">
+            <div class="content-title">
+              <span>Novo lançamento</span>
+              <span class="sub">Registre uma entrada ou saída, classifique e ganhe XP.</span>
+            </div>
+            <div class="tag-chip">Salvo localmente</div>
+          </div>
+          <div class="card" style="margin-bottom:12px;">
+            <div class="tabs">
+              <button class="tab-btn active" data-txtype="saida">Saída (gasto)</button>
+              <button class="tab-btn" data-txtype="entrada">Entrada (renda)</button>
+            </div>
+            <form class="form" id="txForm">
+              <input type="hidden" id="txTipo" value="SAIDA" />
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Valor (R$)</label>
+                  <input type="number" step="0.01" id="txValor" placeholder="Ex: 85.90" required />
+                </div>
+                <div class="form-group">
+                  <label>Data</label>
+                  <input type="date" id="txData" required />
+                </div>
+                <div class="form-group">
+                  <label>Conta</label>
+                  <select id="txConta">
+                    <option>Conta corrente</option>
+                    <option>Cartão de crédito</option>
+                    <option>Dinheiro</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Categoria</label>
+                  <select id="txCategoria">
+                    <option>Mercado</option>
+                    <option>Restaurante</option>
+                    <option>Lanche</option>
+                    <option>Transporte</option>
+                    <option>Lazer</option>
+                    <option>Saúde</option>
+                    <option>Moradia</option>
+                    <option>Educação</option>
+                    <option>Outros</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Tag (opcional)</label>
+                  <input type="text" id="txTag" placeholder="#viagem, #trabalho..." />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="txDescricao" placeholder="Ex: Almoço com a equipe, mercado do mês, gasolina..."></textarea>
+              </div>
+              <button type="submit" class="btn-primary">
+                Salvar lançamento <span>💾</span>
+              </button>
+              <span class="mini-text">
+                Nesta versão, o lançamento fica salvo apenas neste navegador (localStorage). Não há envio para servidor.
+              </span>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-title-row">
+              <div>
+                <h3>Classificação & previsão</h3>
+                <span>Como isso conversa com o planejamento.</span>
+              </div>
+            </div>
+            <p style="font-size:13px;color:var(--text-soft);margin-top:4px;">
+              Em versões futuras, os lançamentos aqui poderiam ser vinculados automaticamente às despesas fixas (ex.: "Aluguel", "Luz") ou a cofrinhos (ex.: "Viagem") para alimentar o planejamento.
+            </p>
+          </div>
+        </div>
+
+        <!-- PLANEJAMENTO & COFRINHOS -->
+        <div class="section" id="section-planejamento">
+          <div class="content-header">
+            <div class="content-title">
+              <span>Planejamento & Cofrinhos</span>
+              <span class="sub">Salário, despesas fixas e objetivos específicos.</span>
+            </div>
+          </div>
+          <div class="main-grid">
+            <!-- Coluna esquerda: Salário + Despesas fixas -->
+            <div>
+              <div class="card" style="margin-bottom:12px;">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Salário mensal</h3>
+                    <span>Base para prever risco de estourar o mês.</span>
+                  </div>
+                  <span class="tag-chip" id="salaryTag">Não informado</span>
+                </div>
+                <form class="form" id="salaryForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Salário líquido mensal (R$)</label>
+                      <input type="number" id="salaryValor" step="0.01" placeholder="Ex: 11000" />
+                    </div>
+                  </div>
+                  <button class="btn-primary" type="submit">
+                    Salvar salário
+                  </button>
+                  <div class="mini-text" id="salaryInfo">
+                    Informe seu salário líquido para que o app consiga calcular quanto já está comprometido com fixas e cofrinhos.
+                  </div>
+                </form>
+              </div>
+
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Despesas fixas mensais</h3>
+                    <span>Aluguel, luz, internet, plano de celular, etc.</span>
+                  </div>
+                  <span class="tag-chip" id="fixedResumo">R$ 0,00 / mês</span>
+                </div>
+                <form class="form" id="fixedForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Descrição</label>
+                      <input type="text" id="fixedDesc" placeholder="Ex: Aluguel, Luz, Internet..." />
+                    </div>
+                    <div class="form-group">
+                      <label>Valor mensal (R$)</label>
+                      <input type="number" id="fixedValor" step="0.01" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Dia do vencimento (opcional)</label>
+                      <input type="number" id="fixedDia" min="1" max="31" placeholder="Ex: 10" />
+                    </div>
+                    <div class="form-group">
+                      <label>Categoria</label>
+                      <select id="fixedCategoria">
+                        <option>Moradia</option>
+                        <option>Energia</option>
+                        <option>Internet</option>
+                        <option>Telefone</option>
+                        <option>Assinatura</option>
+                        <option>Educação</option>
+                        <option>Transporte</option>
+                        <option>Outros</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button class="btn-primary" type="submit">
+                    Adicionar despesa fixa
+                  </button>
+                </form>
+                <div class="list-simple" id="fixedList">
+                  <!-- Itens de despesas fixas via JS -->
+                </div>
+                <div class="mini-text">
+                  Despesas fixas são consideradas todo mês na previsão, antes mesmo de registrar lançamentos diários.
+                </div>
+              </div>
+            </div>
+
+            <!-- Coluna direita: Cofrinhos & resumo de risco -->
+            <div>
+              <div class="card" style="margin-bottom:12px;">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Cofrinhos & objetivos</h3>
+                    <span>Viagem, curso, computador novo, etc.</span>
+                  </div>
+                </div>
+                <form class="form" id="goalForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Nome do objetivo</label>
+                      <input type="text" id="goalNome" placeholder="Ex: Viagem Nordeste 2026" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Valor alvo (R$)</label>
+                      <input type="number" id="goalAlvo" step="0.01" />
+                    </div>
+                    <div class="form-group">
+                      <label>Já poupado (R$)</label>
+                      <input type="number" id="goalAtual" step="0.01" value="0" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Prazo (meses)</label>
+                      <input type="number" id="goalPrazo" />
+                    </div>
+                  </div>
+                  <button class="btn-primary" type="submit">
+                    Criar cofrinho
+                  </button>
+                </form>
+                <div class="list-simple" id="goalList" style="margin-top:8px;">
+                  <!-- Cofrinhos via JS -->
+                </div>
+                <div class="mini-text">
+                  O app calcula quanto você precisa aportar por mês em cada cofrinho e soma isso no planejamento para mostrar
+                  se o mês fica apertado ou não.
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Resumo de risco do mês</h3>
+                    <span>Com base em salário, fixas, cofrinhos e gastos do mês.</span>
+                  </div>
+                </div>
+                <div id="planningSummary" class="pill-tip">
+                  Configure salário, despesas fixas e cofrinhos para ver se o mês tende a fechar no verde ou no vermelho.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESERVA -->
+        <div class="section" id="section-reserva">
+          <div class="content-header">
+            <div class="content-title">
+              <span>Reserva de emergência</span>
+              <span class="sub">Construa seu colchão financeiro com metas claras.</span>
+            </div>
+          </div>
+          <div class="main-grid">
+            <div>
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Meta e progresso (exemplo)</h3>
+                    <span>Com base em despesa média mensal de R$ 3.000.</span>
+                  </div>
+                </div>
+                <div class="balance-main">
+                  <div>
+                    <span class="label">Meta total (6 meses)</span>
+                    <span class="value">R$ 18.000</span>
+                  </div>
+                  <span class="badge">Você tem R$ 6.000</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-bar-fill" style="width:33%;"></div>
+                </div>
+                <div class="mini-text">
+                  Para chegar à meta em 12 meses, o ideal seria guardar cerca de <strong>R$ 1.000/mês</strong>.
+                  Você pode ajustar prazo ou despesa base na simulação ao lado.
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Simulação rápida</h3>
+                    <span>Veja como pequenas mudanças ajudam.</span>
+                  </div>
+                </div>
+                <form class="form" id="reservaForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Despesa média mensal (R$)</label>
+                      <input type="number" id="resDespesa" value="3000" />
+                    </div>
+                    <div class="form-group">
+                      <label>Meses de segurança</label>
+                      <input type="number" id="resMeses" value="6" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Reserva atual (R$)</label>
+                      <input type="number" id="resAtual" value="6000" />
+                    </div>
+                    <div class="form-group">
+                      <label>Prazo desejado (meses)</label>
+                      <input type="number" id="resPrazo" value="12" />
+                    </div>
+                  </div>
+                  <button class="btn-primary" type="submit">
+                    Simular contribuição mensal
+                  </button>
+                </form>
+                <div class="pill-tip" id="reservaResultado" style="margin-top:8px;">
+                  Preencha os campos e clique em simular.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INVESTIMENTOS -->
+        <div class="section" id="section-investimentos">
+          <div class="content-header">
+            <div class="content-title">
+              <span>Simulador de investimentos</span>
+              <span class="sub">Brinque com cenários e veja o potencial de longo prazo.</span>
+            </div>
+          </div>
+          <div class="card">
+            <form class="form" id="invForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tipo (simulação)</label>
+                  <select id="invTipo">
+                    <option value="conservador">Conservador · 6% a.a.</option>
+                    <option value="moderado">Moderado · 8% a.a.</option>
+                    <option value="agressivo">Agressivo · 12% a.a.</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Valor inicial (R$)</label>
+                  <input type="number" id="invInicial" value="1000" />
+                </div>
+                <div class="form-group">
+                  <label>Aporte mensal (R$)</label>
+                  <input type="number" id="invMensal" value="300" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Prazo (anos)</label>
+                  <input type="number" id="invAnos" value="5" />
+                </div>
+              </div>
+              <button class="btn-primary" type="submit">Simular</button>
+            </form>
+            <div class="pill-tip" id="invResultado" style="margin-top:8px;">
+              Ajuste os parâmetros e clique em simular para ver o potencial da constância.
+            </div>
+          </div>
+        </div>
+
+        <!-- GAMIFICACAO -->
+        <div class="section" id="section-gamificacao">
+          <div class="content-header">
+            <div class="content-title">
+              <span>Seu lado gamer financeiro</span>
+              <span class="sub">Acompanhe níveis, XP e conquistas.</span>
+            </div>
+          </div>
+          <div class="main-grid">
+            <div>
+              <div class="card" style="margin-bottom:12px;">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Nível atual (exemplo)</h3>
+                    <span>Barra de progresso ilustrativa.</span>
+                  </div>
+                </div>
+                <div class="badge-level">
+                  <span>⚔️ Nível 3 · Planejador</span>
+                </div>
+                <div class="xp-bar">
+                  <div class="xp-fill"></div>
+                </div>
+                <div class="xp-caption">
+                  Em uma versão completa, o XP evoluiria conforme seus lançamentos, uso de cofrinhos e regularidade no app.
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Conquistas</h3>
+                    <span>Metas já desbloqueadas (exemplo).</span>
+                  </div>
+                </div>
+                <div class="pill-list">
+                  <div class="pill-soft positive">✅ Primeiro mês no azul</div>
+                  <div class="pill-soft positive">✅ Reserva &gt; 1 salário</div>
+                  <div class="pill-soft positive">✅ 7 dias seguidos registrando gastos</div>
+                  <div class="pill-soft">🔒 50% dos cofrinhos no prazo</div>
+                  <div class="pill-soft">🔒 3 meses seguidos sem estourar orçamento</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-title-row">
+                  <div>
+                    <h3>Regras de XP (ideias)</h3>
+                    <span>Para uma futura engine de gamificação.</span>
+                  </div>
+                </div>
+                <ul class="missions-list">
+                  <li class="mission-item">
+                    <div class="mission-left">
+                      <div class="mission-badge" style="border-color:#4ade80;"></div>
+                      <span>Registrar gasto com categoria e descrição</span>
+                    </div>
+                    <span class="xp">+5 XP</span>
+                  </li>
+                  <li class="mission-item">
+                    <div class="mission-left">
+                      <div class="mission-badge" style="border-color:#38bdf8;"></div>
+                      <span>Completar checklist diário</span>
+                    </div>
+                    <span class="xp">+25 XP</span>
+                  </li>
+                  <li class="mission-item">
+                    <div class="mission-left">
+                      <div class="mission-badge" style="border-color:#a855f7;"></div>
+                      <span>Aumentar a reserva em 5% no mês</span>
+                    </div>
+                    <span class="xp">+60 XP</span>
+                  </li>
+                </ul>
+                <div class="mini-text">
+                  Em uma próxima versão, poderíamos ligar XP diretamente às ações: registrar despesas fixas, criar cofrinhos,
+                  manter o mês no verde, etc.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ---------- CONSTANTES LOCALSTORAGE ----------
+    const STORAGE_TX = 'finquest_transactions';
+    const STORAGE_FIXED = 'finquest_fixed';
+    const STORAGE_SALARY = 'finquest_salary';
+    const STORAGE_GOALS = 'finquest_goals';
+
+    // ---------- FUNÇÕES GENÉRICAS ----------
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return parsed ?? fallback;
+      } catch (e) {
+        console.error('Erro ao ler localStorage', key, e);
+        return fallback;
+      }
+    }
+
+    function saveJson(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.error('Erro ao salvar localStorage', key, e);
+      }
+    }
+
+    function formatDateBr(isoDate) {
+      if (!isoDate) return '';
+      const [year, month, day] = isoDate.split('-');
+      if (!year || !month || !day) return isoDate;
+      return `${day}/${month}`;
+    }
+
+    function formatMoneyBR(value) {
+      const num = Number(value || 0);
+      return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    // ---------- TRANSAÇÕES ----------
+    function loadTransactions() {
+      return loadJson(STORAGE_TX, []);
+    }
+
+    function saveTransactions(list) {
+      saveJson(STORAGE_TX, list);
+    }
+
+    function addTransaction(tx) {
+      const current = loadTransactions();
+      current.unshift(tx);
+      const limited = current.slice(0, 500);
+      saveTransactions(limited);
+      return limited;
+    }
+
+    function renderTransactions() {
+      const container = document.getElementById('txListDashboard');
+      if (!container) return;
+      const txs = loadTransactions();
+
+      container.innerHTML = '';
+
+      if (!txs.length) {
+        const empty = document.createElement('div');
+        empty.style.padding = '10px';
+        empty.style.fontSize = '12px';
+        empty.style.color = '#9ca3af';
+        empty.textContent = 'Você ainda não registrou nenhum lançamento. Use a aba "Registrar lançamento" para começar.';
+        container.appendChild(empty);
+        return;
+      }
+
+      txs.slice(0, 12).forEach(tx => {
+        const item = document.createElement('div');
+        item.className = 'tx-item';
+
+        const left = document.createElement('div');
+        const title = document.createElement('div');
+        title.className = 'tx-title';
+
+        const dot = document.createElement('span');
+        dot.className = 'tx-dot';
+        dot.style.background = tx.tipo === 'ENTRADA' ? '#22c55e' : '#f97373';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = tx.descricao && tx.descricao.trim().length
+          ? tx.descricao
+          : (tx.tipo === 'ENTRADA' ? 'Entrada' : 'Saída');
+
+        title.appendChild(dot);
+        title.appendChild(nameSpan);
+
+        const cat = document.createElement('div');
+        cat.className = 'tx-category';
+        cat.textContent = `${tx.tipo === 'ENTRADA' ? 'Entrada' : 'Saída'} · ${tx.categoria || 'Sem categoria'}`;
+
+        left.appendChild(title);
+        left.appendChild(cat);
+
+        const right = document.createElement('div');
+
+        const val = document.createElement('div');
+        val.className = 'tx-value ' + (tx.tipo === 'ENTRADA' ? 'pos' : 'neg');
+        const sign = tx.tipo === 'ENTRADA' ? '+' : '-';
+        val.textContent = `${sign} ${formatMoneyBR(tx.valor)}`;
+
+        const date = document.createElement('div');
+        date.className = 'tx-date';
+        date.textContent = formatDateBr(tx.data);
+
+        right.appendChild(val);
+        right.appendChild(date);
+
+        item.appendChild(left);
+        item.appendChild(right);
+
+        container.appendChild(item);
+      });
+    }
+
+    // ---------- DESPESAS FIXAS ----------
+    function loadFixed() {
+      return loadJson(STORAGE_FIXED, []);
+    }
+
+    function saveFixed(list) {
+      saveJson(STORAGE_FIXED, list);
+    }
+
+    function addFixed(item) {
+      const current = loadFixed();
+      current.push(item);
+      saveFixed(current);
+    }
+
+    function removeFixed(id) {
+      const filtered = loadFixed().filter(f => f.id !== id);
+      saveFixed(filtered);
+    }
+
+    function renderFixedList() {
+      const listEl = document.getElementById('fixedList');
+      const resumoEl = document.getElementById('fixedResumo');
+      if (!listEl || !resumoEl) return;
+
+      const fixed = loadFixed();
+      listEl.innerHTML = '';
+
+      let total = 0;
+      fixed.forEach(f => {
+        total += Number(f.valor || 0);
+      });
+
+      resumoEl.textContent = `${formatMoneyBR(total)} / mês`;
+
+      if (!fixed.length) {
+        const empty = document.createElement('div');
+        empty.style.padding = '8px';
+        empty.style.fontSize = '12px';
+        empty.style.color = '#9ca3af';
+        empty.textContent = 'Nenhuma despesa fixa cadastrada. Exemplos: aluguel, luz, internet.';
+        listEl.appendChild(empty);
+        return;
+      }
+
+      fixed.forEach(f => {
+        const row = document.createElement('div');
+        row.className = 'list-row';
+
+        const col1 = document.createElement('div');
+        col1.innerHTML = `<strong>${f.descricao}</strong><br/><span class="label">${f.categoria || 'Sem categoria'}</span>`;
+
+        const col2 = document.createElement('div');
+        col2.innerHTML = `<span class="label">Valor</span><br/>${formatMoneyBR(f.valor)}`;
+
+        const col3 = document.createElement('div');
+        const diaText = f.diaVenc ? 'Dia ' + f.diaVenc : 'Sem dia';
+        col3.innerHTML = `<span class="label">Vencimento</span><br/>${diaText}`;
+
+        const col4 = document.createElement('div');
+        const btnRemove = document.createElement('button');
+        btnRemove.className = 'btn-small-danger';
+        btnRemove.textContent = 'Remover';
+        btnRemove.addEventListener('click', () => {
+          if (confirm('Remover esta despesa fixa?')) {
+            removeFixed(f.id);
+            renderFixedList();
+            renderPlanningSummary();
+          }
+        });
+        col4.appendChild(btnRemove);
+
+        row.appendChild(col1);
+        row.appendChild(col2);
+        row.appendChild(col3);
+        row.appendChild(col4);
+
+        listEl.appendChild(row);
+      });
+    }
+
+    // ---------- SALÁRIO ----------
+    function loadSalary() {
+      const v = loadJson(STORAGE_SALARY, null);
+      if (v == null) return null;
+      return Number(v) || null;
+    }
+
+    function saveSalary(value) {
+      saveJson(STORAGE_SALARY, value);
+    }
+
+    function renderSalaryInfo() {
+      const salary = loadSalary();
+      const tag = document.getElementById('salaryTag');
+      const info = document.getElementById('salaryInfo');
+      const input = document.getElementById('salaryValor');
+
+      if (salary && salary > 0) {
+        if (input) input.value = salary;
+        if (tag) {
+          tag.textContent = formatMoneyBR(salary);
+        }
+        if (info) {
+          info.innerHTML = `Salário atual configurado em <strong>${formatMoneyBR(salary)}</strong>. 
+            O planejamento usa este valor como base para comparar com despesas fixas, cofrinhos e gastos do mês.`;
+        }
+      } else {
+        if (tag) tag.textContent = 'Não informado';
+        if (info) {
+          info.textContent = 'Informe seu salário líquido para que o app consiga calcular quanto já está comprometido com fixas e cofrinhos.';
+        }
+      }
+    }
+
+    // ---------- COFRINHOS / OBJETIVOS ----------
+    function loadGoals() {
+      return loadJson(STORAGE_GOALS, []);
+    }
+
+    function saveGoals(list) {
+      saveJson(STORAGE_GOALS, list);
+    }
+
+    function addGoal(goal) {
+      const current = loadGoals();
+      current.push(goal);
+      saveGoals(current);
+    }
+
+    function removeGoal(id) {
+      const filtered = loadGoals().filter(g => g.id !== id);
+      saveGoals(filtered);
+    }
+
+    function computeGoalMonthly(goal) {
+      const alvo = Number(goal.alvo || 0);
+      const atual = Number(goal.atual || 0);
+      const prazo = Number(goal.prazo || 0);
+      if (prazo <= 0) return 0;
+      const faltante = Math.max(alvo - atual, 0);
+      return faltante / prazo;
+    }
+
+    function renderGoalsList() {
+      const listEl = document.getElementById('goalList');
+      if (!listEl) return;
+      const goals = loadGoals();
+      listEl.innerHTML = '';
+
+      if (!goals.length) {
+        const empty = document.createElement('div');
+        empty.style.padding = '8px';
+        empty.style.fontSize = '12px';
+        empty.style.color = '#9ca3af';
+        empty.textContent = 'Nenhum cofrinho criado. Exemplos: viagem, curso, carro, PC novo.';
+        listEl.appendChild(empty);
+        return;
+      }
+
+      let totalMensal = 0;
+
+      goals.forEach(g => {
+        const mensal = computeGoalMonthly(g);
+        totalMensal += mensal;
+
+        const row = document.createElement('div');
+        row.className = 'list-row';
+
+        const col1 = document.createElement('div');
+        col1.innerHTML = `<strong>${g.nome}</strong><br/><span class="label">Objetivo: ${formatMoneyBR(g.alvo)}</span>`;
+
+        const col2 = document.createElement('div');
+        col2.innerHTML = `<span class="label">Já poupado</span><br/>${formatMoneyBR(g.atual)}`;
+
+        const col3 = document.createElement('div');
+        const prazoText = g.prazo > 0 ? `${g.prazo} meses` : 'Sem prazo';
+        const mensalText = g.prazo > 0 ? formatMoneyBR(mensal) + '/mês' : '-';
+        col3.innerHTML = `<span class="label">${prazoText}</span><br/>${mensalText}`;
+
+        const col4 = document.createElement('div');
+        const btnRemove = document.createElement('button');
+        btnRemove.className = 'btn-small-danger';
+        btnRemove.textContent = 'Remover';
+        btnRemove.addEventListener('click', () => {
+          if (confirm('Remover este cofrinho/objetivo?')) {
+            removeGoal(g.id);
+            renderGoalsList();
+            renderPlanningSummary();
+          }
+        });
+        col4.appendChild(btnRemove);
+
+        row.appendChild(col1);
+        row.appendChild(col2);
+        row.appendChild(col3);
+        row.appendChild(col4);
+
+        listEl.appendChild(row);
+      });
+
+      // Rodapé com total de aportes mensais sugeridos
+      const footer = document.createElement('div');
+      footer.style.padding = '8px 9px';
+      footer.style.fontSize = '11px';
+      footer.style.borderTop = '1px solid rgba(31,41,55,0.7)';
+      footer.innerHTML = `Aportes mensais recomendados para todos os cofrinhos: <strong>${formatMoneyBR(totalMensal)}</strong>.`;
+      listEl.appendChild(footer);
+    }
+
+    // ---------- PREVISÃO / RISCO DO MÊS ----------
+    function computePlanningSummary() {
+      const salary = loadSalary() || 0;
+      const fixed = loadFixed();
+      const goals = loadGoals();
+      const txs = loadTransactions();
+
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      let totalFixas = 0;
+      fixed.forEach(f => {
+        totalFixas += Number(f.valor || 0);
+      });
+
+      let totalGoalsMensal = 0;
+      goals.forEach(g => {
+        totalGoalsMensal += computeGoalMonthly(g);
+      });
+
+      let totalSaidasMes = 0;
+      txs.forEach(tx => {
+        if (tx.tipo !== 'SAIDA') return;
+        if (!tx.data) return;
+        const d = new Date(tx.data);
+        if (isNaN(d.getTime())) return;
+        if (d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+          totalSaidasMes += Number(tx.valor || 0);
+        }
+      });
+
+      const comprometido = totalFixas + totalGoalsMensal + totalSaidasMes;
+      const saldoPrevisto = salary - comprometido;
+
+      return {
+        salary,
+        totalFixas,
+        totalGoalsMensal,
+        totalSaidasMes,
+        comprometido,
+        saldoPrevisto
+      };
+    }
+
+    function renderPlanningSummary() {
+      const summary = computePlanningSummary();
+      const el = document.getElementById('planningSummary');
+      const elDash = document.getElementById('planningSummaryDashboard');
+      const tagRiscoResumo = document.getElementById('tagRiscoResumo');
+
+      const { salary, totalFixas, totalGoalsMensal, totalSaidasMes, comprometido, saldoPrevisto } = summary;
+
+      if (!salary || salary <= 0) {
+        if (el) el.innerHTML = 'Informe seu salário e cadastre suas despesas fixas para que o app calcule se o mês tende a ficar apertado ou tranquilo.';
+        if (elDash) elDash.innerHTML = 'Sem salário configurado. Vá em <strong>Planejamento & Cofrinhos</strong> e informe seu salário para ver a previsão.';
+        if (tagRiscoResumo) {
+          tagRiscoResumo.textContent = 'Planejamento';
+          tagRiscoResumo.style.borderColor = 'rgba(148,163,184,0.4)';
+          tagRiscoResumo.style.color = '#e5e7eb';
+        }
+        return;
+      }
+
+      let statusTexto = '';
+      let statusBadge = '';
+      let corBorder = '';
+      if (saldoPrevisto < 0) {
+        statusTexto = `⚠️ Risco alto de estourar o mês. Faltariam aproximadamente ${formatMoneyBR(Math.abs(saldoPrevisto))}.`;
+        statusBadge = 'Risco alto';
+        corBorder = 'rgba(248,113,113,0.9)';
+      } else if (saldoPrevisto <= salary * 0.1) {
+        statusTexto = `⚠️ Mês apertado. Sobra pouco: cerca de ${formatMoneyBR(saldoPrevisto)} após fixas, cofrinhos e gastos do mês.`;
+        statusBadge = 'Zona amarela';
+        corBorder = 'rgba(234,179,8,0.9)';
+      } else {
+        statusTexto = `✅ Mês confortável. Sobrariam cerca de ${formatMoneyBR(saldoPrevisto)} após considerar fixas, cofrinhos e gastos já registrados.`;
+        statusBadge = 'Zona verde';
+        corBorder = 'rgba(34,197,94,0.9)';
+      }
+
+      const htmlResumo = `
+        <div style="font-size:12px;">
+          <p><strong>Salário líquido:</strong> ${formatMoneyBR(salary)}</p>
+          <p><strong>Despesas fixas:</strong> ${formatMoneyBR(totalFixas)}</p>
+          <p><strong>Aportes mensais em cofrinhos:</strong> ${formatMoneyBR(totalGoalsMensal)}</p>
+          <p><strong>Gastos variáveis (mês atual):</strong> ${formatMoneyBR(totalSaidasMes)}</p>
+          <p style="margin-top:6px;">${statusTexto}</p>
+        </div>
+      `;
+
+      if (el) el.innerHTML = htmlResumo;
+      if (elDash) elDash.innerHTML = htmlResumo;
+
+      if (tagRiscoResumo) {
+        tagRiscoResumo.textContent = statusBadge;
+        tagRiscoResumo.style.borderColor = corBorder;
+        tagRiscoResumo.style.color = '#e0f2fe';
+      }
+    }
+
+    // ---------- RESERVA (SIMULAÇÃO) ----------
+    const reservaForm = document.getElementById('reservaForm');
+    const reservaResultado = document.getElementById('reservaResultado');
+    if (reservaForm && reservaResultado) {
+      reservaForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const desp = parseFloat(document.getElementById('resDespesa').value || '0');
+        const meses = parseInt(document.getElementById('resMeses').value || '0', 10);
+        const atual = parseFloat(document.getElementById('resAtual').value || '0');
+        const prazo = parseInt(document.getElementById('resPrazo').value || '0', 10);
+
+        if (!desp || !meses || !prazo) {
+          reservaResultado.textContent = 'Preencha os campos de despesa, meses de segurança e prazo desejado.';
+          return;
+        }
+        const meta = desp * meses;
+        const faltante = Math.max(meta - atual, 0);
+        const mensal = faltante / prazo;
+
+        reservaResultado.innerHTML = '<strong>Meta total:</strong> ' + formatMoneyBR(meta) +
+          '. Falta aproximadamente <strong>' + formatMoneyBR(faltante) +
+          '</strong>. Guardando cerca de <strong>' + formatMoneyBR(mensal) +
+          '</strong> por mês você atinge a meta no prazo informado.';
+      });
+    }
+
+    // ---------- INVESTIMENTOS (SIMULAÇÃO) ----------
+    const invForm = document.getElementById('invForm');
+    const invResultado = document.getElementById('invResultado');
+
+    function taxaAnual(tipo) {
+      if (tipo === 'conservador') return 0.06;
+      if (tipo === 'moderado') return 0.08;
+      return 0.12;
+    }
+
+    if (invForm && invResultado) {
+      invForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const tipo = document.getElementById('invTipo').value;
+        const inicial = parseFloat(document.getElementById('invInicial').value || '0');
+        const mensal = parseFloat(document.getElementById('invMensal').value || '0');
+        const anos = parseInt(document.getElementById('invAnos').value || '0', 10);
+
+        if (!anos) {
+          invResultado.textContent = 'Informe um prazo em anos.';
+          return;
+        }
+
+        const taxa = taxaAnual(tipo);
+        const meses = anos * 12;
+        const i = Math.pow(1 + taxa, 1/12) - 1;
+
+        const vfInicial = inicial * Math.pow(1 + i, meses);
+        const fator = (Math.pow(1 + i, meses) - 1) / i;
+        const vfAportes = mensal * fator;
+        const valorFuturo = vfInicial + vfAportes;
+        const totalAportado = inicial + mensal * meses;
+        const juros = valorFuturo - totalAportado;
+
+        invResultado.innerHTML =
+          'Em <strong>' + anos + ' anos</strong>, com aportes mensais de <strong>' + formatMoneyBR(mensal) +
+          '</strong>, você teria aproximadamente <strong>' + formatMoneyBR(valorFuturo) +
+          '</strong> no cenário ' + tipo +
+          '.<br/>Total aportado: ' + formatMoneyBR(totalAportado) +
+          '. Juros aproximados: <strong>' + formatMoneyBR(juros) + '</strong>.';
+      });
+    }
+
+    // ---------- NAVEGAÇÃO LATERAL ----------
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.section');
+
+    function showSection(id) {
+      sections.forEach(sec => {
+        sec.classList.remove('active');
+      });
+      const sec = document.getElementById('section-' + id);
+      if (sec) sec.classList.add('active');
+      navButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.section === id);
+      });
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        showSection(btn.dataset.section);
+      });
+    });
+
+    const btnNewTxHeader = document.getElementById('btnNewTxHeader');
+    if (btnNewTxHeader) {
+      btnNewTxHeader.addEventListener('click', () => {
+        showSection('transacoes');
+      });
+    }
+    const btnGoTransacoes = document.getElementById('btnGoTransacoes');
+    if (btnGoTransacoes) {
+      btnGoTransacoes.addEventListener('click', () => {
+        showSection('transacoes');
+      });
+    }
+
+    // ---------- FORM TRANSACOES ----------
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const txTipoHidden = document.getElementById('txTipo');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        txTipoHidden.value = btn.dataset.txtype === 'entrada' ? 'ENTRADA' : 'SAIDA';
+      });
+    });
+
+    const txForm = document.getElementById('txForm');
+
+    if (txForm) {
+      txForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const tipo = txTipoHidden.value;
+        const valor = parseFloat(document.getElementById('txValor').value || '0');
+        const data = document.getElementById('txData').value;
+        const conta = document.getElementById('txConta').value;
+        const categoria = document.getElementById('txCategoria').value;
+        const tag = document.getElementById('txTag').value;
+        const descricao = document.getElementById('txDescricao').value;
+
+        if (!valor || !data) {
+          alert('Preencha pelo menos valor e data.');
+          return;
+        }
+
+        const tx = {
+          id: Date.now(),
+          tipo,
+          valor,
+          data,
+          conta,
+          categoria,
+          tag,
+          descricao
+        };
+
+        addTransaction(tx);
+        renderTransactions();
+        renderPlanningSummary();
+
+        alert('Lançamento salvo com sucesso neste navegador! Lembrando: se limpar os dados/cache do navegador, as informações são perdidas.');
+
+        txForm.reset();
+        txTipoHidden.value = tipo;
+      });
+    }
+
+    // ---------- FORM SALÁRIO ----------
+    const salaryForm = document.getElementById('salaryForm');
+    if (salaryForm) {
+      salaryForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const v = parseFloat(document.getElementById('salaryValor').value || '0');
+        if (!v || v <= 0) {
+          alert('Informe um salário válido.');
+          return;
+        }
+        saveSalary(v);
+        renderSalaryInfo();
+        renderPlanningSummary();
+        alert('Salário salvo com sucesso neste navegador.');
+      });
+    }
+
+    // ---------- FORM DESPESAS FIXAS ----------
+    const fixedForm = document.getElementById('fixedForm');
+    if (fixedForm) {
+      fixedForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const desc = document.getElementById('fixedDesc').value.trim();
+        const valor = parseFloat(document.getElementById('fixedValor').value || '0');
+        const dia = document.getElementById('fixedDia').value;
+        const cat = document.getElementById('fixedCategoria').value;
+
+        if (!desc || !valor) {
+          alert('Preencha pelo menos descrição e valor da despesa fixa.');
+          return;
+        }
+
+        addFixed({
+          id: Date.now(),
+          descricao: desc,
+          valor,
+          diaVenc: dia ? parseInt(dia, 10) : null,
+          categoria: cat
+        });
+
+        fixedForm.reset();
+        renderFixedList();
+        renderPlanningSummary();
+      });
+    }
+
+    // ---------- FORM COFRINHOS ----------
+    const goalForm = document.getElementById('goalForm');
+    if (goalForm) {
+      goalForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('goalNome').value.trim();
+        const alvo = parseFloat(document.getElementById('goalAlvo').value || '0');
+        const atual = parseFloat(document.getElementById('goalAtual').value || '0');
+        const prazo = parseInt(document.getElementById('goalPrazo').value || '0', 10);
+
+        if (!nome || !alvo || alvo <= 0) {
+          alert('Preencha pelo menos nome e valor alvo do cofrinho.');
+          return;
+        }
+
+        addGoal({
+          id: Date.now(),
+          nome,
+          alvo,
+          atual,
+          prazo
+        });
+
+        goalForm.reset();
+        renderGoalsList();
+        renderPlanningSummary();
+      });
+    }
+
+    // ---------- RESET GERAL ----------
+    const btnResetAll = document.getElementById('btnResetAll');
+    if (btnResetAll) {
+      btnResetAll.addEventListener('click', () => {
+        const ok = confirm('Tem certeza que deseja zerar tudo? Isso apaga lançamentos, despesas fixas, salário e cofrinhos deste navegador.');
+        if (!ok) return;
+        localStorage.removeItem(STORAGE_TX);
+        localStorage.removeItem(STORAGE_FIXED);
+        localStorage.removeItem(STORAGE_SALARY);
+        localStorage.removeItem(STORAGE_GOALS);
+        // Re-renderiza tudo
+        renderTransactions();
+        renderFixedList();
+        renderGoalsList();
+        renderSalaryInfo();
+        renderPlanningSummary();
+        alert('Dados zerados com sucesso neste navegador.');
+      });
+    }
+
+    // ---------- INICIALIZAÇÃO ----------
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTransactions();
+      renderFixedList();
+      renderGoalsList();
+      renderSalaryInfo();
+      renderPlanningSummary();
+    });
+  </script>
+</body>
+</html>
